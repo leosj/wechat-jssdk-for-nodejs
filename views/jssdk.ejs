@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">
+    <title><%= title %></title>
+    <meta name="Description" id="desp" content="<%= seoDesp %>"/>
+    <meta name="Keywords" id="keywords" content="<%= seoKeywords %>"/>
+    <link rel='stylesheet' type="text/css" href="/components/bootstrap/dist/css/bootstrap.min.css"/>
+    <link rel='stylesheet' type="text/css" href='/stylesheets/style.css' />
+  </head>
+  <body>
+  	<div class="page-header">
+	  <h3>微信jssdk接口 <small>相关示例</small></h3>
+	</div>
+    <div class="jumbotron">
+    	<div class="container">
+    		<h4>一、图片类相关接口</h4>
+			  <h5>1、拍照或从手机相册中选图接口</h5>
+			  <h5>2、预览图片接口</h5>
+			  <h5>3、上传图片接口(演示上传选中最后一张图片)</h5>
+			  <h5>4、下载图片接口(演示下载刚刚上传的图片)</h5>
+			  <p>
+			  	<a class="btn btn-primary" id="chooseImg" role="button">选择</a>
+			  	<a class="btn btn-success" id="prevImg" role="button">预览</a>
+			  	<a class="btn btn-info" id="uploadImg" role="button">上传</a>
+			  	<a class="btn btn-warning" id="downloadImg" role="button">下载</a>
+			  </p>
+		  </div>
+		</div>
+		
+		<div class="jumbotron">
+    	<div class="container">
+    		<h4>二、界面类操作</h4>
+			  <h5>1、显示/隐藏右上角菜单接口</h5>
+			  <h5>2、关闭当前网页窗口接口</h5>
+			  <h5>3、批量显示/隐藏功能按钮接口</h5>
+			  <h5>4、显示/隐藏所有非基础按钮接口</h5>
+			  <p>
+			  	<a class="btn btn-primary" id="toggleOptionMenu" role="button">隐藏右上角菜单</a>
+			  	<a class="btn btn-success" id="closeWindow" role="button">关闭网页</a>
+			  	<a class="btn btn-info" id="toggleMenuItems" role="button">隐藏功能按钮</a>
+			  	<a class="btn btn-warning" id="toggleAllNonBaseMenuItem" role="button">隐藏非基础按钮</a>
+			  </p>
+		  </div>
+		</div>
+  </body>
+  <script src="https://res.wx.qq.com/open/js/jweixin-1.1.0.js" type="text/javascript" charset="utf-8"></script>
+	<script src="/javascripts/wxshare.js" type="text/javascript" charset="utf-8"></script>
+	<script type="text/javascript">
+		var appId = '<%= appid %>',
+		timestamp = '<%= timestamp %>',
+		nonceStr = '<%= noncestr %>',
+		signature = '<%= signature %>';
+	</script>
+	<script src="/javascripts/jssdk.js" type="text/javascript" charset="utf-8"></script>
+</html>
