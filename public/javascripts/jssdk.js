@@ -194,4 +194,130 @@ wx.ready(function () {
 		}
 		menuShowFlag.AllNonBaseMenuItem = !menuShowFlag.AllNonBaseMenuItem;
 	};
+	
+	//音频接口类
+	var voiceFlag = {
+		isRecord: false,
+		isPlaying: false
+	}
+	 var voices = {
+	    localId: [],
+	    serverId: []
+	 };
+	document.querySelector('#toggleVoice').onclick = function() {
+		var self = this;
+		if(!voiceFlag.isRecord) {
+			wx.startRecord();
+			self.innerText = '停止录音';
+			voiceFlag.isRecord = !voiceFlag.isRecord;
+			wx.onVoiceRecordEnd({
+			    // 录音时间超过一分钟没有停止的时候会执行 complete 回调
+			    complete: function (res) {
+			    	
+					voiceFlag.isRecord = !voiceFlag.isRecord;
+			    	alert('录音完成');
+			        voices.localId.push(res.localId); 
+					self.innerText = '开始录音';
+			    }
+			});
+		} else {
+			wx.stopRecord({
+			    success: function (res) {
+					voiceFlag.isRecord = !voiceFlag.isRecord;
+			        voices.localId.push(res.localId);
+			        alert('录音完成');
+			        self.innerText = '开始录音';
+			    }
+			});
+		}
+	};
+	
+	document.querySelector('#togglePlayVoice').onclick = function() {
+		
+		if(voices.localId.length==0) {
+			alert('还没有录制声音哟');
+			return;
+		}
+		
+		var self = this;
+		if(!voiceFlag.isPlaying) {
+			wx.playVoice({
+			    localId: voices.localId[voices.localId.length-1] // 需要播放的音频的本地ID，由stopRecord接口获得
+			});
+			self.innerText = '暂停播放录制的音频';
+			voiceFlag.isPlaying = true;
+			wx.onVoicePlayEnd({
+			    success: function (res) {
+			        voiceFlag.isPlaying = false;
+			        alert('播放完毕');
+			    }
+			});
+		} else {
+			wx.pauseVoice({
+			    localId: voices.localId[voices.localId.length-1] // 需要暂停的音频的本地ID，由stopRecord接口获得
+			});
+			 alert('暂停播放');
+			voiceFlag.isPlaying = false;
+		}
+	};
+	
+	document.querySelector('#stopPlayVoice').onclick = function() {
+		if(voices.localId.length==0) {
+			alert('还没有录制声音哟');
+			return;
+		}
+		if(!voiceFlag.isPlaying) {
+			alert('还没有正在播放的录制声音哟');
+			return;
+		}
+		
+		wx.stopVoice({
+		    localId: voices.localId[voices.localId.length-1] // 需要暂停的音频的本地ID，由stopRecord接口获得
+		});
+		alert('停止播放成功');
+	};
+	
+	//上传录音
+	document.querySelector('#uploadVoice').onclick = function() {
+		if(voices.localId.length == 0) {
+			alert('没有录制的音频');
+			return;
+		}
+		wx.uploadVoice({
+		    localId: voices.localId[voices.localId.length-1], 
+		    isShowProgressTips: 1, // 默认为1，显示进度提示
+		    success: function (res) {
+		        voices.serverId.push(res.serverId); 
+		    }
+		});
+	};
+	//下载录音
+	document.querySelector('#downVoice').onclick = function() {
+		if(voices.serverId.length == 0) {
+			alert('没有录制的音频');
+			return;
+		}
+		wx.downloadVoice({
+		    serverId: voices.serverId[voices.serverId.length-1], 
+		    isShowProgressTips: 1, // 默认为1，显示进度提示
+		    success: function (res) {
+		        voices.localId.push(res.localId); // 返回图片下载后的本地ID
+		    }
+		});
+	};
+	
+	document.querySelector('#translateVoice').onclick = function() {
+		if(voices.localId.length == 0) {
+			alert('没有识别的音频');
+			return;
+		}
+		wx.translateVoice({
+		   localId: voices.localId[voices.localId.length-1], // 需要识别的音频的本地Id，由录音相关接口获得
+		    isShowProgressTips: 1, // 默认为1，显示进度提示
+		    success: function (res) {
+		        alert(res.translateResult); // 语音识别的结果
+		    }
+		});
+		
+	};
 });
