@@ -91,6 +91,79 @@ module.exports = {
 			}
 		 });
 	},
+	getTokenByCode: function(code,callback) {
+		var callbackparam = {
+			status: true
+		};
+		
+		redisClient.get(wxConfig.access_for_auth_cache_key, function(err, accesstoken) {  
+			if (err) {  
+				callbackparam.status = false;
+				callbackparam.error = err+'获取redis中accesstoken_auth失败';
+				callback(callbackparam);
+			} else if(accesstoken) {
+				callbackparam.accesstoken = accesstoken;
+				callback(callbackparam);
+			} else {
+				var get_token_by_code_url = func.printf(wxConfig.get_token_by_code_url,wxConfig.appid,wxConfig.appsecret,code);
+		
+				request.get(get_token_by_code_url,function(error,res,body){
+					if (!error && res.statusCode == 200) {
+						var access_result = JSON.parse(body);
+						if(access_result.errcode) {
+							callbackparam.status = false;
+							callbackparam.error = access_result.errmsg;
+							callback(callbackparam);
+							
+						} else {
+							redisClient.set(wxConfig.access_for_auth_cache_key, access_result.access_token, function(err, reply) {  
+							    if (err) {  
+							    	callbackparam.status = false;
+									callbackparam.error = err+'往redis存入access_token_auth失败';
+							    } else {
+							    	callbackparam.access_token = access_result.access_token;
+							    	callbackparam.openid = access_result.openid;
+							    	callbackparam.scope = access_result.scope;
+							    	callbackparam.unionid = access_result.unionid;
+							    }
+							    callback(callbackparam);
+							}); 
+							redisClient.expire(wxConfig.access_for_auth_cache_key, access_result.expires_in/2);
+						}
+					} else {
+						callbackparam.status = false;
+						callbackparam.error = error+'请求微信获取access_token_auth失败';
+						callback(callbackparam);
+					}
+				});
+			}
+		 });
+	}
+	getUserInfoByAuthCode: function(accesstoken,openid){
+		var callbackparam = {
+			status: true
+		};
+		
+		var get_user_info_by_auth_token_url = func.printf(wxConfig.get_user_info_by_auth_token_url,accesstoken,openid);
+		
+		request.get(get_user_info_by_auth_token_url,function(error,res,body){
+			if (!error && res.statusCode == 200) {
+				var userinfo = JSON.parse(body);
+				if(userinfo.errcode) {
+					callbackparam.status = false;
+					callbackparam.error = userinfo.errmsg;
+					callback(callbackparam);
+				} else {
+					callbackparam.userinfo = userinfo;
+					callback(callbackparam);
+				}
+			} else {
+				callbackparam.status = false;
+				callbackparam.error = error+'请求微信获取userinfo失败';
+				callback(callbackparam);
+			}
+		});
+	},
 	signForJsSdk: function(url,jsapiticket,callback) {
 		
 		var callbackparam = {
