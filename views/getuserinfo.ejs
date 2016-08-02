@@ -9,6 +9,41 @@
     <link rel='stylesheet' type="text/css" href='/stylesheets/style.css' />
   </head>
   <body>
+  	<% if (error) { %>
+		<div class="alert alert-danger" role="alert"><%= error %></div>
+	<% } else { %>
+  
   	
+  	<table class="table table-bordered">
+  		<thead>
+  			<tr>
+  				<th colspan="2" class="text-center">用户基本信息</th>
+  			</tr>
+  		</thead>
+  		<tbody>
+  			<tr>
+  				<td class="text-center col-xs-3">头像</td>
+  				<td class="text-center"><img src="<%= userinfo.headimgurl %>" style="width: 25%;" alt="<%= userinfo.nickname %>" class="img-rounded"></td>
+  			</tr>
+  			<tr>
+  				<td class="text-center">昵称</td>
+  				<td class="text-center"><%= userinfo.nickname %></td>
+  			</tr>
+  			<tr>
+  				<td class="text-center">性别</td>
+  				<td class="text-center"><%= userinfo.sex==1?'男':(userinfo.sex==2?'女':'未知') %></td>
+  			</tr>
+  			<tr>
+  				<td class="text-center">国家</td>
+  				<td class="text-center"><%= userinfo.country %></td>
+  			</tr>
+  			<tr>
+  				<td class="text-center">地点</td>
+  				<td class="text-center"><%= userinfo.province+userinfo.city %></td>
+  			</tr>
+  		</tbody>
+  	</table>
+  	
+  	<% } %>
   </body>
 </html>

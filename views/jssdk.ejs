@@ -9,6 +9,9 @@
     <link rel='stylesheet' type="text/css" href='/stylesheets/style.css' />
   </head>
   <body>
+  	<% if (error) { %>
+		<div class="alert alert-danger" role="alert"><%= error %></div>
+	<% } else { %>
   	<div class="page-header">
 	  <h3>微信jssdk接口 <small>相关示例</small></h3>
 	</div>
@@ -74,6 +77,7 @@
 			  </p>
 		  </div>
 		</div>
+		<% } %>
   </body>
   <script src="https://res.wx.qq.com/open/js/jweixin-1.1.0.js" type="text/javascript" charset="utf-8"></script>
 	<script src="/javascripts/wxshare.js" type="text/javascript" charset="utf-8"></script>

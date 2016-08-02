@@ -8,7 +8,8 @@ module.exports = function(app){
 			title : 'nodejs微信JSSDK示例',
 			seoDesp: 'nodejs微信JSSDK示例desp',
 			seoKeywords:'nodejs，微信JSSDK',
-			appid : wxConfig.appid
+			appid : wxConfig.appid,
+			error:''
 		};
 		var url = req.protocol + '://' + req.hostname + req.originalUrl; //获取当前url
 		
@@ -23,11 +24,13 @@ module.exports = function(app){
 	  						res.render('jssdk', data);
 						});
 					} else {
-						alert(jsapiticket_result.error);
+						data.error = jsapiticket_result.error;
+	  					res.render('jssdk', data);
 					}
 				});
 			} else {
-				alert(result.error);
+				data.error = result.error;
+				res.render('getuserinfo', data);
 			}
 		});
 	});
