@@ -1,7 +1,6 @@
 var wxConfig = require('../config/wx_config'),
 	wxHelper = require('../common/wxHelper');
 
-
 module.exports = function(app){
 	app.get('/jssdk', function(req, res, next) {
 		var data = {
@@ -13,25 +12,18 @@ module.exports = function(app){
 		};
 		var url = req.protocol + '://' + req.hostname + req.originalUrl; //获取当前url
 		
-		wxHelper.getAccessToken(function(result){
-			if(result.status) {
-				wxHelper.getJsapiTicket(result.accesstoken,function(jsapiticket_result){
-					if(jsapiticket_result.status) {
-						wxHelper.signForJsSdk(url,jsapiticket_result.jsapiticket,function(sign_result){
-							data.noncestr = sign_result.nonceStr;
-							data.timestamp = sign_result.timestamp;
-							data.signature = sign_result.signature;
-	  						res.render('jssdk', data);
-						});
-					} else {
-						data.error = jsapiticket_result.error;
-	  					res.render('jssdk', data);
-					}
-				});
-			} else {
-				data.error = result.error;
-				res.render('getuserinfo', data);
-			}
+		wxHelper.getAccessToken().then(function(accesstoken){
+			return wxHelper.getJsapiTicket(accesstoken);
+		}).then(function(jsapiticket){
+			return wxHelper.signForJsSdk(url,jsapiticket);
+		}).then(function(sign_result){
+			data.noncestr = sign_result.nonceStr;
+			data.timestamp = sign_result.timestamp;
+			data.signature = sign_result.signature;
+	  		res.render('jssdk', data);
+		}).catch(function(err){
+			data.error = err;
+			res.render('commonerror', data);
 		});
 	});
 }

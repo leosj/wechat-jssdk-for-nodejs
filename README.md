@@ -4,7 +4,10 @@
 缓存数据库用的是redis，accesstoken以及jsapiticket都存放在这里面
 
 ##主要示例
+参考http://yoururl/jssdk
 
+![](http://7xjjef.com1.z0.glb.clouddn.com/github-leosj-jssdk1.jpg)
+![](http://7xjjef.com1.z0.glb.clouddn.com/github-leosj-jssdk2.jpg)
 ###<h4>一、图片类相关接口</h4>
 
 1、拍照或从手机相册中选图接口
@@ -50,6 +53,8 @@ shaObj = new jsSHA(string, 'TEXT');
 
 ##网页授权获取用户信息
 参考http://yoururl/getuserinfo
+
+![](http://7xjjef.com1.z0.glb.clouddn.com/github-leosj-getuserinfo.jpg)
 
 获取用户openid后缓存到本地，用session和cookie存放，然后避免一直调用接口，虽然接口调用次数不限，但一直让用户授权还是不好的
 
